@@ -1,0 +1,46 @@
+﻿
+@{
+ViewBag.Title = "Index";
+}
+<script type="text/javascript">
+    $(function () {
+        // Proxy created on the fly
+        var chat = $.connection.chat;
+ 
+        // Declare a function on the chat hub so the server can invoke it
+        chat.addMessage = function (message) {
+            var $cell = $('#board').find('td[data-position="' + message + '"]');
+            $cell.toggleClass('enabled');
+        };
+ 
+
+        $('#board').on('click', 'td', function (e) {
+            var $cell = $(e.target);
+            chat.send($cell.data('position'));
+        });
+ 
+        // Start the connection
+        $.connection.hub.start();
+    });
+</script>
+<style>
+    #board td{ border: 1px solid #ddd;height: 192px;width: 192px; }
+    #board td.enabled { background-color: #99c; }
+</style>
+<table id="board">
+    <tr>
+        <td data-position="0,0"></td>
+        <td data-position="0,1"></td>
+        <td data-position="0,2"></td>
+    </tr>                 
+    <tr>                  
+        <td data-position="1,0"></td>
+        <td data-position="1,1"></td>
+        <td data-position="1,2"></td>
+    </tr>                
+    <tr>                 
+        <td data-position="2,0"></td>
+        <td data-position="2,1"></td>
+        <td data-position="2,2"></td>
+    </tr>
+</table>

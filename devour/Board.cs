@@ -1,43 +1,50 @@
-﻿using SignalR.Hubs;
+﻿using Microsoft.AspNet.SignalR.Hubs;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace devour
 {
-    public class Board : Hub, IConnected
+    public class Board : Hub
     {
-        private static int[] board;
+        private static int[] Cells;
         public static readonly int BoardWidth = 200;
         public static readonly int BoardHeight = 112;
-        public static readonly int PixelCount = BoardWidth*BoardHeight;
+        public static readonly int PixelCount = BoardWidth * BoardHeight;
 
         static Board()
         {
-            board = new int[PixelCount];
+            Cells = new int[PixelCount];
         }
 
-        public void Ping(int id)
+        public int Ping(int id)
         {
-            var value = System.Threading.Interlocked.Increment(ref board[id]);
-            Clients.Pong(id, value);
+            var value = Interlocked.Increment(ref Cells[id]);
+            Clients.All.Pong(id, value);
+
+            return value;
         }
 
         public void Reset()
         {
-            board = new int[PixelCount];
-            Clients.Init(board);
-            Clients.Toast("Board reset by " + Context.ConnectionId);
+            Cells = new int[PixelCount];
+            Clients.All.Init(Cells);
+            Clients.All.Toast("Board reset by " + Context.ConnectionId);
         }
 
-        public Task Connect()
+        public override Task OnConnected()
         {
-            Clients[Context.ConnectionId].Toast("Welcome! Just mouse around...");
-            return Clients[Context.ConnectionId].Init(board);
+            Clients.Caller.Toast("Welcome! Just mouse around...");
+            Clients.Others.Toast("Another user has joined!");
+            Clients.Caller.Init(Cells);
+
+            return base.OnConnected();
         }
 
-        public Task Reconnect(IEnumerable<string> groups)
+        public override Task OnReconnected()
         {
-            return Clients[Context.ConnectionId].Init(board);
+            Clients.Caller.Init(Cells);
+            return base.OnReconnected();
         }
     }
 }

@@ -4,21 +4,20 @@
 }
 <script type="text/javascript">
     $(function () {
-        // Proxy created on the fly
-        var $connection = $.connection.board;
 
-        // Declare a function on the chat hub so the server can invoke it
-        $connection.Pong = function (id, value) {
+        var board = $.connection.board;
+
+        board.client.pong = function(id, value) {
             $('#cell' + id).toggleClass('enabled', (value % 2) === 1);
         };
 
-        $connection.Init = function(board) {
-            for (var i = 0; i < board.length; ++i) {
-                $connection.Pong(i, board[i]);
+        board.client.init = function (b) {
+            for (var i = 0; i < b.length; ++i) {
+                board.client.pong(i, b[i]);
             }
         };
 
-        $connection.Toast = function(message) {
+        board.client.toast = function (message) {
             var $message = $('<div class="message"/>').text(message);
             $('body').append($message.fadeIn(250).delay(2000).fadeOut(250));
         };
@@ -34,16 +33,18 @@
             $board.append($tr);
         }
 
-        $('#reset').on('click', function() { $connection.reset(); });
+        $('#reset').on('click', function() { board.server.reset(); });
 
         // Start the connection
-        $.connection.hub.start().done(function () {
-            $board.on('mouseenter', 'td', function (e) {
-                var $c = $(e.target);
-                var i = $c.attr('id').substring(4);
-                $connection.ping(i);
+        $.connection.hub
+            .start({ transport: 'longPolling' })
+            .pipe(function () {
+                $board.on('mouseenter', 'td', function (e) {
+                    var $c = $(e.target);
+                    var id = $c.attr('id').substring(4);
+                    board.server.ping(id);
+                });
             });
-        });
     });
 </script>
 <style>

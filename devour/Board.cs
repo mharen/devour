@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNet.SignalR.Hubs;
+﻿using System;
+using System.Globalization;
+using Microsoft.AspNet.SignalR.Hubs;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,8 +30,9 @@ namespace devour
         public void Reset()
         {
             Cells = new int[PixelCount];
-            Clients.All.Init(Cells);
-            Clients.All.Toast("Board reset by " + Context.ConnectionId);
+            Clients.All.Init();
+            Clients.Caller.Toast("Board reset...");
+            Clients.Others.Toast("Board reset by another user...");
         }
 
         public override Task OnConnected()
@@ -37,7 +40,6 @@ namespace devour
             Clients.Caller.Toast("Welcome! Just mouse around...");
             Clients.Others.Toast("Another user has joined!");
             Clients.Caller.Init(Cells);
-
             return base.OnConnected();
         }
 

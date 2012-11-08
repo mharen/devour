@@ -12,6 +12,12 @@
         };
 
         board.client.init = function (b) {
+            if(b==null) {
+                $('#board td.enabled').removeClass('.enabled');
+                console.log('reset');
+                return;
+            }
+            
             for (var i = 0; i < b.length; ++i) {
                 board.client.pong(i, b[i]);
             }
@@ -38,13 +44,37 @@
         // Start the connection
         $.connection.hub
             .start()
-            .pipe(function () {
-                $board.on('mouseenter', 'td', function (e) {
+            .pipe(function() {
+                $board.on('mouseenter', 'td', function(e) {
                     var $c = $(e.target);
                     var id = $c.attr('id').substring(4);
+                    $c.toggleClass('enabled');
                     board.server.ping(id);
                 });
             });
+
+        var connectionCounts = 0;
+        $.connection.hub.stateChanged(function(e) {
+            var message = null; 
+
+            switch (e.newState) {
+                case $.signalR.connectionState.connected:
+                    if(connectionCounts> 0) {
+                        message= "Aaaaand we're back!";  
+                    } 
+                    ++connectionCounts;
+                    break;
+                case $.signalR.connectionState.reconnecting:
+                    message = "Reconnecting...";
+                    break;
+                case $.signalR.connectionState.disconnected:
+                    message = "Lost connection! :(";
+                    break;
+            }
+            if(message != null) {
+                board.client.toast(message);
+            }
+        });
     });
 </script>
 <style>

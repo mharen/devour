@@ -31,7 +31,7 @@ namespace devour
 
         public Task Connect()
         {
-            Clients.Toast(string.Format("Welcome, {0}", Context.ConnectionId));
+            Clients[Context.ConnectionId].Toast("Welcome! Just mouse around...");
             return Clients[Context.ConnectionId].Init(board);
         }
 

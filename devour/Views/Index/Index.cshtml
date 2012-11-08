@@ -37,7 +37,7 @@
 
         // Start the connection
         $.connection.hub
-            .start({ transport: 'longPolling' })
+            .start()
             .pipe(function () {
                 $board.on('mouseenter', 'td', function (e) {
                     var $c = $(e.target);

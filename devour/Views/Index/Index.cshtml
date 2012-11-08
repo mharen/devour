@@ -1,4 +1,5 @@
-﻿@{
+﻿@using devour
+@{
     ViewBag.Title = "Index";
 }
 <script type="text/javascript">
@@ -8,7 +9,7 @@
 
         // Declare a function on the chat hub so the server can invoke it
         $connection.Pong = function (id, value) {
-            $('#cell' + id).toggleClass('enabled', (value % 2) === 0);
+            $('#cell' + id).toggleClass('enabled', (value % 2) === 1);
         };
 
         $connection.Init = function(board) {
@@ -17,33 +18,43 @@
             }
         };
 
-        $connection.Toast = function(message)
-        {
+        $connection.Toast = function(message) {
             var $message = $('<div class="message"/>').text(message);
             $('body').append($message.fadeIn(250).delay(2000).fadeOut(250));
-        }
+        };
         
         var $board = $('#board');
-        
-        for (var i = 0; i < 2000; ++i) {
-            var $cell = $("<div/>").attr('id', "cell"+i);
-            $board.append($cell);
+        var k = 0;
+        for (var i = 0; i < @(Board.BoardHeight); ++i) {
+            var $tr = $("<tr/>");
+            for (var j = 0; j < @Board.BoardWidth; ++j) {
+                var $cell = $("<td/>").attr('id', "cell" + k++);
+                $tr.append($cell);
+            }
+            $board.append($tr);
         }
-        
-        $board.on('mouseenter', 'div', function (e) {
-            var $c = $(e.target);
-            var i = $c.attr('id').substring(4);
-            $connection.ping(i);
-            
-        });
 
         $('#reset').on('click', function() { $connection.reset(); });
 
         // Start the connection
-        $.connection.hub.start();
+        $.connection.hub.start().done(function () {
+            $board.on('mouseenter', 'td', function (e) {
+                var $c = $(e.target);
+                var i = $c.attr('id').substring(4);
+                $connection.ping(i);
+            });
+        });
     });
 </script>
 <style>
+    html, body, #board {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #666;
+    }
+
     body {
         -webkit-touch-callout: none;
         -webkit-user-select: none;
@@ -51,29 +62,28 @@
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
-        padding: 0;margin: 0;
-        background-color: #666;
     }
-    #board div.enabled { background-color: #ddd; }
 
-    #board div {
-        height: 30px;
-        width: 30px;
-        font-size: 16px;
-        text-align: center;
-        vertical-align: middle;
-        display: inline-block;
-        background-color: #666;
+    #board {
+        empty-cells: show;
+        border-spacing: 0;
     }
+
+        #board .enabled {
+            background-color: #dde;
+        }
+
     #reset {
         position: fixed;
         top: 5px;
-        left: 5px; 
+        left: 5px;
     }
+
     .message {
         padding-top: 150px;
         position: fixed;
-        left: 0;top: 0;
+        left: 0;
+        top: 0;
         width: 100%;
         height: 100%;
         background-color: rgba(255,255,255,.5);
@@ -84,5 +94,5 @@
     }
 </style>
 <button id="reset">Reset</button>
-<div id="board">
-</div>
+<table id="board">
+</table>

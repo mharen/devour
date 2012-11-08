@@ -7,10 +7,13 @@ namespace devour
     public class Board : Hub, IConnected
     {
         private static int[] board;
-        
+        public static readonly int BoardWidth = 200;
+        public static readonly int BoardHeight = 112;
+        public static readonly int PixelCount = BoardWidth*BoardHeight;
+
         static Board()
         {
-            board = new int[2000];
+            board = new int[PixelCount];
         }
 
         public void Ping(int id)

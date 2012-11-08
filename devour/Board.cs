@@ -24,7 +24,7 @@ namespace devour
 
         public void Reset()
         {
-            board = new int[2000];
+            board = new int[PixelCount];
             Clients.Init(board);
             Clients.Toast("Board reset by " + Context.ConnectionId);
         }

@@ -8,8 +8,8 @@ namespace devour
     public class Board : Hub
     {
         private static int[] Cells;
-        public static readonly int BoardWidth = 200;
-        public static readonly int BoardHeight = 112;
+        public static readonly int BoardWidth = 100;
+        public static readonly int BoardHeight = 56;
         public static readonly int PixelCount = BoardWidth * BoardHeight;
 
         static Board()

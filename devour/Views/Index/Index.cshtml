@@ -4,13 +4,13 @@
 }
 <script type="text/javascript">
     $(function () {
-
+        // the signalr proxy
         var board = $.connection.board;
 
+        // client events that can also be called from the server
         board.client.pong = function(id, value) {
             $('#cell' + id).toggleClass('enabled', (value % 2) === 1);
         };
-
         board.client.init = function (b) {
             if(b==null) {
                 $('#board td.enabled').removeClass('enabled');
@@ -21,12 +21,12 @@
                 board.client.pong(i, b[i]);
             }
         };
-
         board.client.toast = function (message) {
             var $message = $('<div class="message"/>').text(message);
             $('body').append($message.fadeIn(250).delay(2000).fadeOut(250));
         };
         
+        // build the table
         var $board = $('#board');
         var k = 0;
         for (var i = 0; i < @(Board.BoardHeight); ++i) {
@@ -38,7 +38,11 @@
             $board.append($tr);
         }
 
-        $('#reset').on('click', function() { board.server.reset(); });
+        // wire up the reset button
+        $('#reset').on('click', function(e) { 
+            board.server.reset();
+            e.preventDefault(); 
+        });
 
         // Start the connection
         $.connection.hub
@@ -77,7 +81,10 @@
         //});
     });
 </script>
-<button id="reset">Reset</button>
+<div id="nav">
+    <a href="#" id="reset">Reset Board</a>
+    <a href="http://blog.wassupy.com/search/label/SignalR">About</a>
+    <a href="https://github.com/mharen/devour">Source</a>
+</div>
 <table id="board">
 </table>
-<div id="about"><a href="http://blog.wassupy.com/search/label/SignalR">About</a></div>

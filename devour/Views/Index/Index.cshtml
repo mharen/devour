@@ -32,7 +32,7 @@
         for (var i = 0; i < @(Board.BoardHeight); ++i) {
             var $tr = $("<tr/>");
             for (var j = 0; j < @Board.BoardWidth; ++j) {
-                var $cell = $("<td/>").attr('id', "cell" + k++);
+                var $cell = $("<td/>").attr('id', "cell" + k++).attr('onclick', 'void(0)');
                 $tr.append($cell);
             }
             $board.append($tr);
@@ -48,11 +48,25 @@
         $.connection.hub
             .start()
             .pipe(function() {
-                $board.on('mouseenter', 'td', function(e) {
+                var lastid = null;
+                $(document).on('mousemove', function(e) {
+                    e.preventDefault();
+
+
                     var $c = $(e.target);
+                    
+                    if(!$c.is('td')) return;
+                    
                     var id = $c.attr('id').substring(4);
-                    $c.toggleClass('enabled');
-                    board.server.ping(id);
+                    $('#debug').text(id);
+                    
+                    // debounce
+                    if (id != lastid) {
+                        $c.toggleClass('enabled');
+                        board.server.ping(id);
+
+                        lastid = id;
+                    }
                 });
             });
 
@@ -85,6 +99,7 @@
     <a href="#" id="reset">Reset Board</a>
     <a href="http://blog.wassupy.com/search/label/SignalR">About</a>
     <a href="https://github.com/mharen/devour">Source</a>
+    <a href="#" id="debug"></a>
 </div>
 <table id="board">
 </table>

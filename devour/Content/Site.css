@@ -23,11 +23,11 @@ body {
 
     #board .enabled {
         background-color: #dde;
-        -webkit-transition: background-color 100ms linear;
+        /*-webkit-transition: background-color 100ms linear;
         -moz-transition: background-color 100ms linear;
         -o-transition: background-color 100ms linear;
         -ms-transition: background-color 100ms linear;
-        transition: background-color 100ms linear;
+        transition: background-color 100ms linear;*/
     }
 
 #nav {
@@ -52,7 +52,7 @@ a, a:link, a:visited, a:hover, a:active {
 }
 
 .message {
-    padding-top: 150px;
+    padding-top: 100px;
     position: fixed;
     left: 0;
     top: 0;

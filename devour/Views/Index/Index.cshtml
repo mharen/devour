@@ -14,7 +14,6 @@
         board.client.init = function (b) {
             if(b==null) {
                 $('#board td.enabled').removeClass('enabled');
-                console.log('reset');
                 return;
             }
             
@@ -53,28 +52,29 @@
                 });
             });
 
-        var connectionCounts = 0;
-        $.connection.hub.stateChanged(function(e) {
-            var message = null; 
+        //This isn't working all that great...
+        //var connectionCounts = 0;
+        //$.connection.hub.stateChanged(function(e) {
+        //    var message = null; 
 
-            switch (e.newState) {
-                case $.signalR.connectionState.connected:
-                    if(connectionCounts > 0) {
-                        message= "Aaaaand we're back!";  
-                    } 
-                    ++connectionCounts;
-                    break;
-                case $.signalR.connectionState.reconnecting:
-                    message = "Reconnecting...";
-                    break;
-                case $.signalR.connectionState.disconnected:
-                    message = "Lost connection! :(";
-                    break;
-            }
-            if(message != null) {
-                board.client.toast(message);
-            }
-        });
+        //    switch (e.newState) {
+        //        case $.signalR.connectionState.connected:
+        //            if(connectionCounts > 0) {
+        //                message= "Aaaaand we're back!";  
+        //            } 
+        //            ++connectionCounts;
+        //            break;
+        //        case $.signalR.connectionState.reconnecting:
+        //            message = "Reconnecting...";
+        //            break;
+        //        case $.signalR.connectionState.disconnected:
+        //            message = "Lost connection! :(";
+        //            break;
+        //    }
+        //    if(message != null) {
+        //        board.client.toast(message);
+        //    }
+        //});
     });
 </script>
 <button id="reset">Reset</button>

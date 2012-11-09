@@ -58,7 +58,6 @@
                     if(!$c.is('td')) return;
                     
                     var id = $c.attr('id').substring(4);
-                    $('#debug').text(id);
                     
                     // debounce
                     if (id != lastid) {
@@ -69,37 +68,12 @@
                     }
                 });
             });
-
-        //This isn't working all that great...
-        //var connectionCounts = 0;
-        //$.connection.hub.stateChanged(function(e) {
-        //    var message = null; 
-
-        //    switch (e.newState) {
-        //        case $.signalR.connectionState.connected:
-        //            if(connectionCounts > 0) {
-        //                message= "Aaaaand we're back!";  
-        //            } 
-        //            ++connectionCounts;
-        //            break;
-        //        case $.signalR.connectionState.reconnecting:
-        //            message = "Reconnecting...";
-        //            break;
-        //        case $.signalR.connectionState.disconnected:
-        //            message = "Lost connection! :(";
-        //            break;
-        //    }
-        //    if(message != null) {
-        //        board.client.toast(message);
-        //    }
-        //});
     });
 </script>
 <div id="nav">
     <a href="#" id="reset">Reset Board</a>
     <a href="http://blog.wassupy.com/search/label/SignalR">About</a>
     <a href="https://github.com/mharen/devour">Source</a>
-    <a href="#" id="debug"></a>
 </div>
 <table id="board">
 </table>

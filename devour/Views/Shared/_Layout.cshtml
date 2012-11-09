@@ -10,6 +10,11 @@
     <script src="~/Scripts/jquery.signalR-1.0.0-alpha1.min.js"></script>
     <script src="~/signalr/hubs"></script>
     <script type="text/javascript">
+        function preventBehavior(e) {
+            e.preventDefault();
+        };
+        document.addEventListener("touchmove", preventBehavior, false);
+
         var _gaq = _gaq || [];
         _gaq.push(['_setAccount', 'UA-36183629-1']); _gaq.push(['_trackPageview']);
         (function () {

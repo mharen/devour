@@ -52,18 +52,16 @@
                 $(document).on('mousemove', function(e) {
                     e.preventDefault();
 
-
                     var $c = $(e.target);
-                    
                     if(!$c.is('td')) return;
                     
                     var id = $c.attr('id').substring(4);
                     
                     // debounce
+                    // this could be improved for multi-touch
                     if (id != lastid) {
                         $c.toggleClass('enabled');
                         board.server.ping(id);
-
                         lastid = id;
                     }
                 });

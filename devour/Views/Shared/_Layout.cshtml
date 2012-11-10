@@ -14,37 +14,27 @@
         // via http://ross.posterous.com/2008/08/19/iphone-touch-events-in-javascript/ (with some slight changes)
         function touchHandler(event) {
             var touches = event.touches;
-            
             for (var i = 0; i < touches.length; ++i) {
-
-                var touch = touches[i];
-                if(event.type !== "touchmove")
-                {
-                    return;
-                }
-
                 try {
+                    var touch = touches[i];
                     var simulatedEvent = document.createEvent("MouseEvent");
+
                     simulatedEvent.initMouseEvent("mousemove", true, true, window, 1,
                         touch.screenX, touch.screenY,
-                        touch.clientX, touch.clientY, false,
-                        false, false, false, 0/*left*/, null);
+                        touch.clientX, touch.clientY, false /*ctrl*/, false /*alt*/,
+                        false /*shift*/, false /*meta*/, 0 /*left*/, null /*related target*/);
 
                     // via http://stackoverflow.com/questions/3918842/how-to-find-out-the-actual-event-target-of-touchmove-javascript-event
-                    document.elementFromPoint(touch.clientX, touch.clientY).dispatchEvent(simulatedEvent);
+                    var elementUnderFinger = document.elementFromPoint(touch.clientX, touch.clientY);
+                    elementUnderFinger.dispatchEvent(simulatedEvent);
                     event.preventDefault();
-                } catch(e) {
+                } catch (e) {
                     // gulp!
                 }
             }
         }
 
-        $(function () {
-            document.addEventListener("touchstart", touchHandler, true);
-            document.addEventListener("touchmove", touchHandler, true);
-            document.addEventListener("touchend", touchHandler, true);
-            document.addEventListener("touchcancel", touchHandler, true);
-        });
+        document.addEventListener("touchmove", touchHandler, true);
 
 
         var _gaq = _gaq || [];

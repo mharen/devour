@@ -32,7 +32,7 @@
         for (var i = 0; i < @(Board.BoardHeight); ++i) {
             var $tr = $("<tr/>");
             for (var j = 0; j < @Board.BoardWidth; ++j) {
-                var $cell = $("<td/>").attr('id', "cell" + k++).attr('onclick', 'void(0)');
+                var $cell = $("<td/>").attr('id', "cell" + k++);
                 $tr.append($cell);
             }
             $board.append($tr);
